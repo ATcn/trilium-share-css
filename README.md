@@ -2,46 +2,55 @@
 > This diagram shows the full rendering pipeline from browser request to Trilium share page,
 > with the Share CSS treated as an independent styling architecture.
 ```mermaid
-flowchart TD
+flowchart LR
+    subgraph ShareCSS[Custom Share CSS]
+        direction TB
+        CustomCSS[User-injected Custom CSS]
+        RootVars["1. :root Variables\n(Typora Light Theme)"]
+        GlobalReset["2. Global Reset\n(scrollbar / font / links)"]
+        Layout["3. Layout System\n(flex row-reverse + full-width)"]
+        AutoHide["4. Auto-hide Sidebar\n(10px → 280px on hover)"]
+        Typo["5. Typography\n(Typora-style headings)"]
+        CodeTable["6. Code & Tables\n(highlight / zebra)"]
+        Responsive["7. Responsive Rules\n(mobile folding)"]
 
-%% =========================
-%% Layer 1: User & Browser
-%% =========================
-U[User Browser] --> R[Request Shared Note URL]
+        CustomCSS --> RootVars --> GlobalReset --> Layout
+        Layout --> AutoHide
+        Layout --> Typo --> CodeTable
+        Layout --> Responsive
+    end
 
-%% =========================
-%% Layer 2: Trilium Share Pipeline
-%% =========================
-R --> T[Trilium Server]
-T --> S[Share Page HTML]
-S --> D[Default Share CSS]
-D --> C[Custom Share CSS]
+    subgraph Trilium[Trilium Server]
+        direction TB
+        Server[Trilium Server]
+        NoteDB[(Notes Database)]
+        ShareLogic[Share Page Generation]
+        DefaultCSS[Built-in Default Share CSS]
 
-%% =========================
-%% Layer 3: Share CSS Architecture
-%% =========================
-subgraph Share_CSS_Architecture
-    V[Root Variables<br/>Typora Light Theme]
-    G[Global Reset<br/>Width Unlock]
-    L[Layout System<br/>Menu + Main]
-    N[Auto-hide Sidebar<br/>Hover Trigger]
-    T2[Typography System]
-    CT[Code & Table Styling]
-    I[Interaction Polish]
-    R2[Responsive Rules]
+        Server --> NoteDB
+        Server --> ShareLogic
+        ShareLogic --> DefaultCSS
+    end
 
-    V --> G
-    G --> L
-    L --> N
-    L --> T2
-    T2 --> CT
-    CT --> I
-    I --> R2
-    N --> L
-end
+    subgraph Browser[Browser]
+        direction TB
+        UA[User Agent]
+        RenderEngine[Rendering Engine]
+        UA --> RenderEngine
+    end   
+    
+    ShareCSS -->|"Applies final styles"| Trilium
+    Trilium --> |"Invode Custom Css"| ShareCSS
+    Trilium -->|"Serves HTML + <style>"| Browser
+    Browser -->|"Requests shared note"| Trilium
 
-C --> V
-R2 --> F[Final Rendered Share Page]
+    classDef css fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    classDef trilium fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef browser fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+
+    class ShareCSS css
+    class Trilium trilium
+    class Browser browser
 ```
 
 # Features
