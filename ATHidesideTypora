@@ -1,0 +1,460 @@
+/**
+ * Trilium 分享页 Typora 经典浅色风格美化
+ * 版本: 2026.1.27 (适配 Typora 浅色)
+ * 作者：at+gemini+豆包
+ * 布局策略: 100% 宽度流式布局 + Typora 浅色变量驱动
+ */
+
+/* ==========================================================================
+   第一层：原子变量 (替换为 Typora 经典浅色配色)
+   ========================================================================== */
+
+:root {
+    /* --- Typora 基础背景：米白/纯白 --- */
+    --bg-page: #ffffff;           /* Typora 主底色，纯白 */
+    --bg-card: #fbfbfa;          /* 侧边栏/容器背景，浅米色 */
+    --bg-main: #ffffff;          /* 正文区域背景 */
+    
+    /* --- Typora 文字：深灰/黑色 --- */
+    --text-main: #333333;        /* 主文字，深灰（Typora 经典） */
+    --text-muted: #666666;       /* 辅助文字，中灰 */
+    
+    /* --- 交互与高亮 (Typora 蓝色) --- */
+    --link-color: #2a7fff;       /* Typora 经典链接蓝 */
+    --link-hover-color: #0056d2; /* 悬停时深蓝 */
+    --primary: #2a7fff;          /* 强调色：Typora 蓝 */
+    
+    /* --- 极简边框与阴影 (浅色风格) --- */
+    --border: #e6e6e6;           /* Typora 风格浅灰边框 */
+    --shadow: 0 4px 20px rgba(0,0,0,0.05);
+    --radius: 4px;               /* 保持原圆角 */
+    
+    /* --- 表格专用 (Typora 浅色斑马纹) --- */
+    --table-hover-bg: #f5f7ff;   /* 表格悬停浅蓝背景 */
+    --table-hover-text: #333333; /* 悬停文字不变 */
+    
+    /* --- Typora 代码高亮 (接近 Typora 默认) --- */
+    --code-keyword: #007020;     /* 绿色关键字 (Typora 风格) */
+    --code-string: #a31515;      /* 红色字符串 */
+    --code-comment: #008000;     /* 绿色注释 */
+    --code-func: #795e26;        /* 棕色函数名 */
+    --code-variable: #001080;    /* 深蓝色变量/标签 */
+}
+
+/* 针对 Typora 风格的标题渐变微调 (弱化渐变，更贴近 Typora 原生) */
+#title {
+    background: linear-gradient(90deg, #2a7fff, #1a5fcc) !important; /* Typora 蓝渐变 */
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
+/* 侧边栏滑出时的边框微调 (浅色风格边框) */
+#menu {
+    border-right: 1px solid var(--border) !important;
+    background: var(--bg-card) !important;
+}
+
+/* ==========================================================================
+   第二层：100% 宽度锁死解除 (保留原布局逻辑)
+   ========================================================================== */
+
+body.share-body, 
+body.share-body .container, 
+body.share-body .row,
+body.share-body #layout {
+    width: 100vw !important;      
+    max-width: 100vw !important;  
+    margin: 0 !important;         
+    padding: 0 !important;        
+    overflow-x: hidden;           
+}
+
+/* ==========================================================================
+   第三层：核心布局容器 (保留原布局逻辑)
+   ========================================================================== */
+
+#layout {
+    display: flex !important;             
+    flex-direction: row-reverse !important; 
+    max-width: 100% !important;           
+    width: 100% !important;               
+    align-items: flex-start !important;    
+}
+
+/* --- 左侧目录栏 (Menu) --- */
+#menu {
+    flex: 0 0 280px !important;    
+    width: 280px !important;       
+    min-width: 280px !important;   
+    height: 100vh !important;      
+    background: var(--bg-card);    
+    border-left: 1px solid var(--border); 
+    padding: 20px !important;      
+    overflow-y: auto !important;   
+    resize: horizontal;            
+    position: sticky;              
+    top: 0;                        
+    scrollbar-width: thin;         
+    scrollbar-color: var(--border) transparent; 
+}
+
+/* --- 右侧正文区 (Main) --- */
+#main {
+    flex: 1 !important;            
+    max-width: none !important;    
+    width: auto !important;        
+    background: var(--bg-page);    
+    padding: 40px !important;      
+    overflow-y: auto;              
+    border: none !important;       
+    border-radius: 0 !important;   
+}
+
+/* ==========================================================================
+   全局滚动条美化 (适配浅色风格)
+   ========================================================================== */
+
+#menu::-webkit-scrollbar,
+body::-webkit-scrollbar,
+#main::-webkit-scrollbar {
+    width: 6px !important;         
+    height: 6px !important;        
+    display: block !important;    
+}
+
+#menu::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+#main::-webkit-scrollbar-track {
+    background: #f1f1f1 !important; /* 浅色滚动条轨道 */
+}
+
+#menu::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+#main::-webkit-scrollbar-thumb {
+    background-color: #cccccc !important; /* 浅色滑块 */
+    border-radius: 10px !important;            
+    border: 1px solid #f1f1f1 !important; 
+}
+
+#menu::-webkit-scrollbar-thumb:hover {
+    background-color: #999999 !important; /* 悬停略深 */
+}
+
+/* ==========================================================================
+   第四层：文字与链接美化 (Typora 浅色排版)
+   ========================================================================== */
+
+body {
+    color: var(--text-main);       
+    line-height: 1.6;              
+    font-family: -apple-system, system-ui, "Segoe UI", Roboto, sans-serif; 
+}
+
+a {
+    color: var(--link-color) !important; 
+    text-decoration: none;               
+    transition: all 0.2s;                
+}
+
+a:hover {
+    color: var(--link-hover-color) !important; 
+    text-decoration: underline;                
+}
+
+/* --- H1: 页面大标题 (Typora 风格) --- */
+#title {
+    font-size: 2.2em !important;                 
+    font-weight: 800 !important;                 
+    margin-bottom: 30px !important;              
+    padding: 10px 0 !important;                  
+    border: none !important;                     
+}
+
+/* --- H2: 核心章节标题 (Typora 浅色装饰) --- */
+#content h2, .ck-content h2 {
+    font-size: 1.6em;                            
+    font-weight: 700;                            
+    color: #333333 !important;                  /* Typora 深灰标题 */
+    padding: 0.5em 0 0.5em 15px !important;      
+    margin-top: 1.5em !important;                
+    margin-bottom: 0.8em !important;             
+    border-left: 8px solid var(--primary) !important; 
+    border-bottom: 1px solid var(--border) !important; 
+    top: -1px;                                   
+    z-index: 10;                                 
+    box-shadow: 0 10px 10px -10px rgba(0,0,0,0.05); /* 弱化阴影 */
+}
+
+/* --- H3: 子章节标题 --- */
+#content h3, .ck-content h3 {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: #444444 !important; /* Typora 中灰标题 */
+    padding: 0.5em 0 0.5em 15px !important;
+    margin-top: 1.2em !important;
+    margin-bottom: 0.6em !important;
+    border-left: 5px solid var(--primary) !important;
+}
+
+/* --- H4: 弱化标题 --- */
+#content h4, .ck-content h4 {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--text-muted);
+    border-bottom: 1px dashed var(--border);     
+    display: inline-block;                       
+    padding-bottom: 2px;
+    border-left: 3px solid var(--primary) !important;
+    padding-left: 8px !important;                
+}
+
+/* ==========================================================================
+   代码块深度覆盖 (Typora 浅色代码风格)
+   ========================================================================== */
+pre, .ck-content pre {
+    background-color: #f8f8f8 !important; /* Typora 代码块浅灰背景 */
+    border: 1px solid var(--border) !important;
+    padding: 16px !important;
+    border-radius: 0 !important;          
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.02); /* 弱化阴影 */
+}
+
+code, .ck-content code {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important;
+    color: var(--code-string) !important; 
+}
+
+/* 模拟代码语法高亮 (Typora 风格) */
+.ck-content pre code span { color: var(--text-main) !important; }
+pre strong { color: var(--code-keyword) !important; }
+pre em { color: var(--code-comment) !important; font-style: italic; }
+
+/* 行内代码 (Typora 风格) */
+code:not(pre code) {
+    background-color: #f2f2f2 !important; /* 浅色行内代码背景 */
+    color: #e96900 !important; /* Typora 行内代码橙色 */
+    padding: 2px 5px !important;
+    border-radius: 3px;
+}
+
+/* ==========================================================================
+   第五层：表格修复 (保留原笔记自定义样式 + Typora 浅色斑马纹)
+   ========================================================================== */
+
+/* --- 表格容器/单元格 (关键：移除 !important 以保留原笔记自定义样式) --- */
+table td, table th {
+    min-width: 120px;               
+    white-space: nowrap;            
+    border: 1px solid var(--border); /* 移除 !important，允许原笔记样式覆盖 */
+    padding: 12px 16px;              /* 移除 !important，允许原笔记样式覆盖 */
+}
+
+/* --- 表格专用横向滚动条 (适配浅色) --- */
+table::-webkit-scrollbar {
+    height: 8px !important;         
+}
+
+table::-webkit-scrollbar-track {
+    background: #f1f1f1 !important; 
+    border-radius: 10px;
+}
+
+table::-webkit-scrollbar-thumb {
+    background: #cccccc !important;  
+    border-radius: 10px;
+    border: 2px solid #f1f1f1;      
+}
+
+table::-webkit-scrollbar-thumb:hover {
+    background: var(--primary) !important; 
+}
+
+/* --- 斑马纹深度逻辑 (关键：移除 !important 以保留原笔记自定义背景) --- */
+table tr:nth-child(even) td {
+    background-color: #fafafa; /* 移除 !important，允许原笔记覆盖 */
+}
+
+table tr:nth-child(odd) td {
+    background-color: #ffffff; /* 移除 !important，允许原笔记覆盖 */
+}
+
+/* --- 表格悬停增强 (关键：移除 !important 以保留原笔记自定义样式) --- */
+table tr:hover td {
+    background-color: var(--table-hover-bg); /* 移除 !important */
+    color: var(--table-hover-text);          /* 移除 !important */
+}
+
+table tr:hover td a {
+    color: var(--link-hover-color) !important; /* 链接颜色仍强制，避免看不清 */
+}
+
+/* ==========================================================================
+   第六层：响应式布局 (保留原逻辑)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    #layout { 
+        flex-direction: column !important; 
+    }
+    #menu {
+        width: 100vw !important;           
+        height: auto !important;           
+        flex: none !important;             
+        border-left: none !important;
+        border-bottom: 1px solid var(--border); 
+    }
+}
+
+/* ==========================================================================
+   追加补丁：统一使用 Typora 浅色底色 (保留布局属性)
+   ========================================================================== */
+html, 
+body.share-body, 
+body.share-body #layout, 
+body.share-body #layout #main,
+body.share-body #layout-container,
+body.share-body #layout-container > .container,
+body.share-body #layout-container > .container > .row,
+body.share-body .container-fluid,
+body.share-body #content {
+    background-color: var(--bg-page) !important; 
+    min-height: 100vh !important;
+    height: auto !important;
+    border: none !important;
+}
+
+body.share-body #layout,
+body.share-body #main {
+    display: flex !important;
+    flex-direction: column !important; 
+}
+
+/* ==========================================================================
+   暴力宽度补丁：解除所有容器的宽度限制 (保留原逻辑)
+   ========================================================================== */
+
+body.share-body .container, 
+body.share-body .container-fluid, 
+body.share-body .row,
+body.share-body #layout-container {
+    width: 100% !important;
+    max-width: 100vw !important; 
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+#layout {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row-reverse !important; 
+}
+
+#main {
+    flex-grow: 1 !important;     
+    flex-shrink: 0 !important;    
+    width: auto !important;       
+    min-width: 0 !important;      
+    background-color: var(--bg-page) !important; 
+}
+
+#content {
+    width: 100% !important;
+    max-width: none !important;  
+}
+
+/* ==========================================================================
+   拖拽条增强：宽度翻倍补丁 (适配浅色)
+   ========================================================================== */
+
+#menu::-webkit-scrollbar,
+body::-webkit-scrollbar,
+#main::-webkit-scrollbar {
+    width: 15px !important;  
+    height: 15px !important; 
+}
+
+table::-webkit-scrollbar {
+    height: 20px !important;
+}
+
+#menu::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+#main::-webkit-scrollbar-thumb,
+table::-webkit-scrollbar-thumb {
+    border-radius: 20px !important;
+    border: 5px solid var(--bg-page) !important; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #888888 !important; /* 浅色悬停滑块 */
+}
+
+#menu {
+    resize: horizontal !important;
+    border-right: 5px solid var(--border) !important; 
+}
+
+/* ==========================================================================
+   修改后的：终极暴力拉伸 (保持 80% 宽度并居中)
+   ========================================================================== */
+
+.share-body, 
+.share-body #layout-container,
+.share-body #layout-container > .container,
+.share-body #layout-container > .container > .row {
+    width: 80vw !important;           
+    max-width: 80vw !important;
+    margin: 0 auto !important;        
+    padding: 0 !important;
+    display: block !important; 
+}
+
+#layout {
+    display: flex !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin: 0 auto !important;        
+    flex-direction: row-reverse !important; 
+}
+
+#main {
+    flex: 1 1 auto !important;
+    width: auto !important; 
+    max-width: none !important;
+    padding: 40px !important; 
+    margin: 0 !important;
+}
+
+#content, 
+.ck-content, 
+.ck-content > div {
+    width: 100% !important;           
+    max-width: 100% !important;
+}
+
+/* ==========================================================================
+   方案 A：侧边栏自动滑入/滑出 (悬停触发)
+   ========================================================================== */
+
+#menu {
+    transition: all 0.3s ease-in-out !important; 
+    flex: 0 0 10px !important;                 
+    width: 10px !important;
+    min-width: 10px !important;
+    opacity: 0.3; /* 浅色风格提高初始透明度，更隐蔽 */
+    z-index: 100;
+}
+
+#menu:hover {
+    flex: 0 0 280px !important;                
+    width: 280px !important;
+    min-width: 280px !important;
+    opacity: 1;                                
+    box-shadow: 10px 0 30px rgba(0,0,0,0.1); /* 浅色风格弱化阴影 */
+}
+
+#menu:hover + #main {
+    margin-left: 0; 
+}
