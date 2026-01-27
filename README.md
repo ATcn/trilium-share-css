@@ -1,43 +1,47 @@
 # Architecture & Flow
+> This diagram shows the full rendering pipeline from browser request to Trilium share page,
+> with the Share CSS treated as an independent styling architecture.
 ```mermaid
 flowchart TD
 
 %% =========================
 %% Layer 1: User & Browser
 %% =========================
-U[User Browser<br/>Desktop / Mobile] --> R[HTTP Request<br/>Shared Note URL]
+U[User Browser] --> R[Request Shared Note URL]
 
 %% =========================
 %% Layer 2: Trilium Share Pipeline
 %% =========================
 R --> T[Trilium Server]
-T --> S[Share Page HTML Output]
-S --> D[Default Trilium Share CSS]
-D --> C[Custom Share CSS<br/>Typora Light Theme]
+T --> S[Share Page HTML]
+S --> D[Default Share CSS]
+D --> C[Custom Share CSS]
 
 %% =========================
 %% Layer 3: Share CSS Architecture
 %% =========================
-subgraph CSS["Share CSS Architecture"]
-    direction TD
+subgraph Share_CSS_Architecture
+    V[Root Variables<br/>Typora Light Theme]
+    G[Global Reset<br/>Width Unlock]
+    L[Layout System<br/>Menu + Main]
+    N[Auto-hide Sidebar<br/>Hover Trigger]
+    T2[Typography System]
+    CT[Code & Table Styling]
+    I[Interaction Polish]
+    R2[Responsive Rules]
 
-    V[Root Variables<br/>Typora Light Colors] --> G[Global Reset<br/>Width Unlock]
-    G --> L[Layout System<br/>Flexbox: Menu + Main]
-    L --> N[Navigation Logic<br/>Auto-hide Sidebar]
-    L --> T2[Typography System<br/>Headings & Text]
-    T2 --> CT[Code & Table Enhancement]
-    CT --> I[Interaction Polish<br/>Scrollbar / Hover]
-    I --> R2[Responsive Rules<br/>Mobile Adaptation]
-
+    V --> G
+    G --> L
+    L --> N
+    L --> T2
+    T2 --> CT
+    CT --> I
+    I --> R2
     N --> L
 end
 
 C --> V
-
-%% =========================
-%% Final Render
-%% =========================
-R2 --> F[Final Rendered Share Page<br/>Typora-like Reading Experience]
+R2 --> F[Final Rendered Share Page]
 ```
 
 # Features
