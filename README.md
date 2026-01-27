@@ -44,9 +44,9 @@ flowchart LR
     Trilium -->|"Serves HTML + <style>"| Browser
     Browser -->|"Requests shared note"| Trilium
 
-    classDef css fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
-    classDef trilium fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
-    classDef browser fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef css      fill:#e8f5ff,stroke:#1e88e5,stroke-width:4px,color:#0d47a1
+    classDef trilium  fill:#fff8e1,stroke:#f57c00,stroke-width:4px,color:#e65100
+    classDef browser  fill:#e8f5e9,stroke:#2e7d32,stroke-width:4px,color:#1b5e20
 
     class ShareCSS css
     class Trilium trilium
