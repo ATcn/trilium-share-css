@@ -3,7 +3,7 @@
 2. trilium create CSS note, and paste code
 3. share root note add a New Relation: shareCss, isInheritable, value = CSS note
 4. sync and new share css work!
-<img width="1349" height="1173" alt="image" src="https://github.com/user-attachments/assets/e3cf1d19-ba23-45ec-b72a-9d888852b47c" />
+<img width="1924" height="970" alt="image" src="https://github.com/user-attachments/assets/e3b399c4-28ce-478e-b146-87c3f22fb006" />
 
 # demo
 
