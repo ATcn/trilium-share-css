@@ -1,16 +1,43 @@
 # Architecture & Flow
 ```mermaid
 flowchart TD
-A[Root Variables<br/>Typora Light Theme] --> B[Global Reset & Width Unlock]
-B --> C[Layout System<br/>Flexbox: Menu + Main]
-C --> D[Typography Layer<br/>Headings & Text]
-D --> E[Code & Table Enhancement]
-E --> F[Scrollbar & Interaction Polish]
-F --> G[Responsive & Hover Logic]
 
+%% =========================
+%% Layer 1: User & Browser
+%% =========================
+U[User Browser<br/>Desktop / Mobile] --> R[HTTP Request<br/>Shared Note URL]
 
-C --> H[Auto-hide Sidebar<br/>Hover Trigger]
-H --> C
+%% =========================
+%% Layer 2: Trilium Share Pipeline
+%% =========================
+R --> T[Trilium Server]
+T --> S[Share Page HTML Output]
+S --> D[Default Trilium Share CSS]
+D --> C[Custom Share CSS<br/>Typora Light Theme]
+
+%% =========================
+%% Layer 3: Share CSS Architecture
+%% =========================
+subgraph CSS["Share CSS Architecture"]
+    direction TD
+
+    V[Root Variables<br/>Typora Light Colors] --> G[Global Reset<br/>Width Unlock]
+    G --> L[Layout System<br/>Flexbox: Menu + Main]
+    L --> N[Navigation Logic<br/>Auto-hide Sidebar]
+    L --> T2[Typography System<br/>Headings & Text]
+    T2 --> CT[Code & Table Enhancement]
+    CT --> I[Interaction Polish<br/>Scrollbar / Hover]
+    I --> R2[Responsive Rules<br/>Mobile Adaptation]
+
+    N --> L
+end
+
+C --> V
+
+%% =========================
+%% Final Render
+%% =========================
+R2 --> F[Final Rendered Share Page<br/>Typora-like Reading Experience]
 ```
 
 # Features
