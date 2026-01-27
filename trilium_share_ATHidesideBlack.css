@@ -1,0 +1,484 @@
+/**
+ * Trilium 分享页极致深色科技风格美化
+ * 版本: 2026.1.4
+ * 作者：at+gemini
+ * 布局策略: 100% 宽度流式布局 + 深度变量驱动
+ */
+
+/* ==========================================================================
+   第一层：原子变量 (全局色彩与间距控制中心)
+   ========================================================================== */
+
+:root {
+    /* --- Trae 基础背景：极深灰黑 --- */
+    --bg-page: #020408;           /* Trae 主底色，几乎深不见底 */
+    --bg-card: #0b0e14;           /* 侧边栏/容器背景，略带青灰感 */
+    --bg-main: #05070a;           /* 正文区域背景 */
+    
+    /* --- Trae 文字：冷白高对比 --- */
+    --text-main: #dfe1e5;         /* 主文字，略带冷色调的白 */
+    --text-muted: #707d8c;        /* 辅助文字，Trae 标志性的灰蓝色 */
+    
+    /* --- 交互与霓虹高亮 --- */
+    --link-color: #3b82f6;        /* 更有活力的电光蓝 */
+    --link-hover-color: #60a5fa;  /* 悬停时明亮的淡蓝 */
+    --primary: #3b82f6;           /* 强调色：Trae 蓝 */
+    
+    /* --- 极简边框与阴影 --- */
+    --border: #1d2433;            /* Trae 风格的深蓝灰边框，非常细微 */
+    --shadow: 0 4px 20px rgba(0,0,0,0.8);
+    --radius: 4px;                /* Trae 偏向硬朗的小圆角 */
+    
+    /* --- 表格专用 --- */
+    --table-hover-bg: #161b26;    /* 表格悬停时的深青色 */
+    --table-hover-text: #ffffff;
+    
+    /* --- Trae 代码高亮 (AI 风格配色) --- */
+    --code-keyword: #c678dd;      /* 紫色关键字 */
+    --code-string: #98c379;       /* 绿色字符串 */
+    --code-comment: #5c6370;      /* 暗灰注释 */
+    --code-func: #61afef;         /* 蓝色函数名 */
+    --code-variable: #e06c75;     /* 红色变量/标签 */
+}
+
+/* 针对 Trae 风格的标题渐变微调 */
+#title {
+    background: linear-gradient(90deg, #3b82f6, #a855f7) !important; /* 蓝紫渐变，更有 AI 感 */
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
+/* 侧边栏滑出时的边框微调 */
+#menu {
+    border-right: 1px solid var(--border) !important; /* Trae 风格不需要太粗的边框 */
+    background: var(--bg-card) !important;
+}
+
+/* ==========================================================================
+   第二层：100% 宽度锁死解除 (强制穿透框架限制)
+   ========================================================================== */
+
+body.share-body, 
+body.share-body .container, 
+body.share-body .row,
+body.share-body #layout {
+    width: 100vw !important;      /* 宽度占用视口100% | 强制占满浏览器 */
+    max-width: 100vw !important;  /* 屏蔽任何最大宽度限制(如1140px) */
+    margin: 0 !important;         /* 移除外边距 */
+    padding: 0 !important;        /* 移除内边距 */
+    overflow-x: hidden;           /* 隐藏横向溢出 | 防止意外出现底层左右滚动条 */
+}
+
+/* ==========================================================================
+   第三层：核心布局容器 (并排排版与滚动控制)
+   ========================================================================== */
+
+#layout {
+    display: flex !important;             /* 开启弹性布局 | 允许目录与正文并排 */
+    flex-direction: row-reverse !important; /* 布局方向 | row-reverse(目录左正文右), row(正文左目录右) */
+    max-width: 100% !important;           /* 确保容器不溢出 */
+    width: 100% !important;               /* 填满父级 */
+    align-items: flex-start !important;    /* 顶部对齐 | 避免子元素因高度不一而拉伸 */
+}
+
+/* --- 左侧目录栏 (Menu) --- */
+#menu {
+    flex: 0 0 280px !important;    /* 宽固定/不缩放/基础280px | 建议范围: 200px-350px */
+    width: 280px !important;       /* 显式定义宽度 */
+    min-width: 280px !important;   /* 最小宽度限制 */
+    height: 100vh !important;      /* 高度占满屏幕 */
+    background: var(--bg-card);    /* 使用变量背景 */
+    border-left: 1px solid var(--border); /* 左侧边框(因方向反转) | 可选: none(无边框) */
+    padding: 20px !important;      /* 内边距 | 增加文字与边界间隙 */
+    overflow-y: auto !important;   /* 纵向滚动 | 内容超出时显示滚动条 */
+    resize: horizontal;            /* 允许手动拉伸宽度 | 可选: none(锁定宽度) */
+    position: sticky;              /* 粘性定位 | 滚动时固定在侧边 */
+    top: 0;                        /* 距离顶部为0 */
+    scrollbar-width: thin;         /* 火狐细滚动条 | 可选: none(隐藏), auto(默认) */
+    scrollbar-color: var(--border) transparent; /* 火狐滚动条色彩: 滑块 轨道 */
+}
+
+/* --- 右侧正文区 (Main) --- */
+#main {
+    flex: 1 !important;            /* 自动填满剩余空间 | 核心: 占据屏幕剩余所有宽度 */
+    max-width: none !important;    /* 移除内容宽度限制 | 强制 100% 展开 */
+    width: auto !important;        /* 宽度自适应计算 */
+    background: var(--bg-page);    /* 使用主背景色 */
+    padding: 40px !important;      /* 正文内边距 | 建议: 20px(紧凑) 到 60px(开阔) */
+    overflow-y: auto;              /* 纵向滚动 */
+    border: none !important;       /* 移除默认边框 */
+    border-radius: 0 !important;   /* 移除圆角以贴合全屏布局 */
+}
+
+/* ==========================================================================
+   全局滚动条美化 (Webkit内核: Chrome/Edge/Safari)
+   ========================================================================== */
+
+#menu::-webkit-scrollbar,
+body::-webkit-scrollbar,
+#main::-webkit-scrollbar {
+    width: 6px !important;         /* 纵向条宽度 | 建议: 4px-8px */
+    height: 6px !important;        /* 横向条高度 */
+    display: block !important;    /* 强制显示 */
+}
+
+#menu::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+#main::-webkit-scrollbar-track {
+    background: var(--bg-page) !important; /* 轨道背景 | 建议与主页一致实现隐身 */
+}
+
+#menu::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+#main::-webkit-scrollbar-thumb {
+    background-color: var(--border) !important; /* 滑块颜色 */
+    border-radius: 10px !important;            /* 滑块圆角 */
+    border: 1px solid var(--bg-page) !important; /* 滑块边框 | 制造滑块与轨道间的缝隙感 */
+}
+
+#menu::-webkit-scrollbar-thumb:hover {
+    background-color: #484f58 !important;      /* 鼠标悬停色 | 建议比静止状态略亮 */
+}
+
+/* ==========================================================================
+   第四层：文字与链接美化 (排版与可读性)
+   ========================================================================== */
+
+body {
+    color: var(--text-main);       /* 应用变量文字色 */
+    line-height: 1.6;              /* 行高 | 建议: 1.5-1.8 适合阅读 */
+    font-family: -apple-system, system-ui, "Segoe UI", Roboto, sans-serif; /* 优先系统字体 */
+}
+
+a {
+    color: var(--link-color) !important; /* 链接颜色 */
+    text-decoration: none;               /* 默认无下划线 | 可选: underline */
+    transition: all 0.2s;                /* 过渡动画时间 | 0.2s 让变色更柔和 */
+}
+
+a:hover {
+    color: var(--link-hover-color) !important; /* 悬停颜色 */
+    text-decoration: underline;                /* 悬停出现下划线 */
+}
+
+/* --- H1: 页面大标题 --- */
+#title {
+    background: linear-gradient(90deg, #3b82f6, #a855f7) !important; /* 渐变色背景 */
+    -webkit-background-clip: text !important;    /* 剪切背景至文字形状 */
+    -webkit-text-fill-color: transparent !important; /* 填充文字透明以显示背景渐变 */
+    font-size: 2.2em !important;                 /* 字号 | 越大越醒目 */
+    font-weight: 800 !important;                 /* 字重 | 800为特粗 */
+    margin-bottom: 30px !important;              /* 底部间距 */
+    padding: 10px 0 !important;                  /* 上下内补丁 */
+    border: none !important;                     /* 移除默认边框 */
+}
+
+/* --- H2: 核心章节标题 (带侧边装饰) --- */
+#content h2, .ck-content h2 {
+    font-size: 1.6em;                            /* 字号 */
+    font-weight: 700;                            /* 字重 */
+    color: #ffffff !important;                   /* 强制白色 */
+    padding: 0.5em 0 0.5em 15px !important;      /* 内边距 | 左侧15px为装饰条预留空间 */
+    margin-top: 1.5em !important;                /* 上方间距 | 区分不同章节 */
+    margin-bottom: 0.8em !important;             /* 下方间距 */
+    border-left: 8px solid var(--primary) !important; /* 左侧粗装饰条 | 建议: 4px-10px */
+    border-bottom: 1px solid var(--border) !important; /* 底部细分割线 */
+    top: -1px;                                   /* 微调对齐 */
+    z-index: 10;                                 /* 层级确保不被遮挡 */
+    box-shadow: 0 10px 10px -10px rgba(0,0,0,0.5); /* 底部微弱投影 | 增加浮雕感 */
+}
+
+/* --- H3: 子章节标题 --- */
+#content h3, .ck-content h3 {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: #f0f6ff !important;
+    padding: 0.5em 0 0.5em 15px !important;
+    margin-top: 1.2em !important;
+    margin-bottom: 0.6em !important;
+    border-left: 5px solid var(--primary) !important; /* 左侧中等装饰条 */
+}
+
+/* --- H4: 弱化标题 --- */
+#content h4, .ck-content h4 {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--text-muted);
+    border-bottom: 1px dashed var(--border);     /* 虚线下划线 */
+    display: inline-block;                       /* 行内块排列 */
+    padding-bottom: 2px;
+    border-left: 3px solid var(--primary) !important; /* 左侧细装饰条 */
+    padding-left: 8px !important;                /* 配合装饰条的缩进 */
+}
+
+/* ==========================================================================
+   代码块深度覆盖 (VSCode 核心)
+   ========================================================================== */
+pre, .ck-content pre {
+    background-color: var(--bg-main) !important; /* 强制锁定编辑器背景色 */
+    border: 1px solid var(--border) !important;
+    padding: 16px !important;
+    border-radius: 0 !important;          /* IDE 代码块通常是方角 */
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2);
+}
+
+code, .ck-content code {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important;
+    color: var(--code-string) !important; /* 默认字符串色 */
+}
+
+/* 模拟代码语法高亮 */
+.ck-content pre code span { color: var(--text-main) !important; } /* 重置 */
+/* 如果 Trilium 带有特定的 class，可以开启更精准的高亮，这里做通用适配 */
+pre strong { color: var(--code-keyword) !important; }
+pre em { color: var(--code-comment) !important; font-style: italic; }
+
+/* 行内代码 */
+code:not(pre code) {
+    background-color: var(--border) !important;
+    color: #D7BA7D !important;
+    padding: 2px 5px !important;
+    border-radius: 3px;
+}
+
+/* ==========================================================================
+   第五层：表格修复 (斑马纹与独立滚动)
+   ========================================================================== */
+
+/* --- 表格容器/单元格 --- */
+table td, table th {
+    min-width: 120px;               /* 最小列宽 | 强制表格列不被过分压缩 */
+    white-space: nowrap;            /* 强制不换行 | 保证每一列都横向展开 */
+    border: 1px solid var(--border) !important; /* 单元格边框 */
+    padding: 12px 16px !important;  /* 单元格内边距 | 建议: 宽松(16px), 紧凑(8px) */
+}
+
+/* --- 表格专用横向滚动条 --- */
+table::-webkit-scrollbar {
+    height: 8px !important;         /* 横向滚动条高度 | 建议稍宽方便手指/鼠标点击 */
+}
+
+table::-webkit-scrollbar-track {
+    background: var(--bg-card) !important; /* 表格滚动条轨道背景 */
+    border-radius: 10px;
+}
+
+table::-webkit-scrollbar-thumb {
+    background: var(--border) !important;  /* 滑块颜色 */
+    border-radius: 10px;
+    border: 2px solid var(--bg-card);      /* 制造滑块空隙 */
+}
+
+table::-webkit-scrollbar-thumb:hover {
+    background: var(--primary) !important; /* 悬停时变为主色调 | 视觉引导 */
+}
+
+/* --- 斑马纹深度逻辑 --- */
+table tr:nth-child(even) td {
+    background-color: var(--bg-main) !important; /* 偶数行背景 | 可选: #1a1a1a */
+}
+
+table tr:nth-child(odd) td {
+    background-color: var(--bg-card) !important; /* 奇数行背景 */
+}
+
+/* --- 表格悬停增强 --- */
+table tr:hover td {
+    background-color: var(--table-hover-bg) !important; /* 悬停背景变量 */
+    color: var(--table-hover-text) !important;          /* 悬停文字变量 */
+}
+
+table tr:hover td a {
+    color: var(--link-hover-color) !important;          /* 悬停时行内链接颜色同步变白 */
+}
+
+/* ==========================================================================
+   第六层：响应式布局 (适配移动端)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    #layout { 
+        flex-direction: column !important; /* 窄屏下改为纵向堆叠 */
+    }
+    #menu {
+        width: 100vw !important;           /* 目录占满全宽 */
+        height: auto !important;           /* 高度随内容自适应 */
+        flex: none !important;             /* 移除固定宽度限制 */
+        border-left: none !important;
+        border-bottom: 1px solid var(--border); /* 改为底部边框分割 */
+    }
+}
+
+/* ==========================================================================
+   追加补丁：统一使用 Trae 极深底色并保留布局属性
+   ========================================================================== */
+html, 
+body.share-body, 
+body.share-body #layout, 
+body.share-body #layout #main,
+body.share-body #layout-container,
+body.share-body #layout-container > .container,
+body.share-body #layout-container > .container > .row,
+body.share-body .container-fluid,
+body.share-body #content {
+    background-color: var(--bg-page) !important; /* 核心：#020408 */
+    min-height: 100vh !important;
+    height: auto !important;
+    border: none !important;
+}
+
+/* 保持布局引擎开启 */
+body.share-body #layout,
+body.share-body #main {
+    display: flex !important;
+    flex-direction: column !important; /* 针对 main 的垂直排列 */
+}
+
+/* ==========================================================================
+   暴力宽度补丁：解除所有容器的宽度限制
+   ========================================================================== */
+
+/* 1. 解除 Trilium 系统自带的所有容器宽度锁 */
+body.share-body .container, 
+body.share-body .container-fluid, 
+body.share-body .row,
+body.share-body #layout-container {
+    width: 100% !important;
+    max-width: 100vw !important; /* 强制覆盖所有可能的 max-width (如 1140px) */
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* 2. 确保 Flex 布局下的宽度分配 */
+#layout {
+    width: 100% !important;
+    display: flex !important;
+    /* row-reverse 保持目录在右，row 保持目录在左 */
+    flex-direction: row-reverse !important; 
+}
+
+/* 3. 核心：强制 Main 伸展 */
+#main {
+    flex-grow: 1 !important;     /* 关键：强制占据 100% 剩余空间 */
+    flex-shrink: 0 !important;    /* 禁止收缩 */
+    width: auto !important;       /* 让 flex-grow 决定宽度 */
+    min-width: 0 !important;      /* 解决 flex 容器内元素溢出问题 */
+    background-color: var(--bg-page) !important; /* 颜色改为变量 */
+}
+
+/* 4. 强制内容区宽度 */
+#content {
+    width: 100% !important;
+    max-width: none !important;  /* 彻底移除任何宽度上限 */
+}}
+
+/* ==========================================================================
+   拖拽条增强：宽度翻倍补丁
+   ========================================================================== */
+
+/* 1. 目录与正文整体滚动条宽度翻倍 (从 6px 增加到 12px) */
+#menu::-webkit-scrollbar,
+body::-webkit-scrollbar,
+#main::-webkit-scrollbar {
+    width: 15px !important;  /* 纵向滚动条 */
+    height: 15px !important; /* 横向滚动条 */
+}
+
+/* 2. 表格内部滚动条宽度翻倍 (从 8px 增加到 16px) */
+table::-webkit-scrollbar {
+    height: 20px !important;
+}
+
+/* 3. 滚动条滑块 (Thumb) 样式优化，使其更易抓取 */
+#menu::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+#main::-webkit-scrollbar-thumb,
+table::-webkit-scrollbar-thumb {
+    border-radius: 20px !important;
+    border: 5px solid var(--bg-page) !important; /* 增加边框感，视觉上更清晰 */
+}
+
+/* 4. 目录栏可拉伸边缘 (Resize Handle) 增强 */
+/* 注意：浏览器原生的 resize 句柄较难直接通过 CSS 大规模改变形状，
+   但我们可以通过增加内边距让边缘更容易被鼠标捕捉 */
+#menu {
+    resize: horizontal !important;
+    border-right: 5px solid var(--border) !important; /* 将右侧边框加粗一倍，方便定位 */
+}
+
+/* 5. 针对部分浏览器，增加滚动条滑块的悬停亮度，方便确认抓取 */
+::-webkit-scrollbar-thumb:hover {
+    background-color: #505050 !important; 
+}
+
+/* ==========================================================================
+   修改后的：终极暴力拉伸 (保持 80% 宽度并居中)
+   ========================================================================== */
+
+/* 1. 强行拉伸包裹容器，并使用 margin: auto 实现居中 */
+.share-body, 
+.share-body #layout-container,
+.share-body #layout-container > .container,
+.share-body #layout-container > .container > .row {
+    width: 80vw !important;           /* 保持您设定的 80% 宽度 */
+    max-width: 80vw !important;
+    margin: 0 auto !important;        /* 关键：左右 auto 实现居中 */
+    padding: 0 !important;
+    display: block !important; 
+}
+
+/* 2. 布局容器同步居中 */
+#layout {
+    display: flex !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin: 0 auto !important;        /* 关键：左右 auto 实现居中 */
+    flex-direction: row-reverse !important; 
+}
+
+/* 3. 强制 Main 区域忽略任何外部间距，吞掉剩余所有宽度 */
+#main {
+    flex: 1 1 auto !important;
+    width: auto !important; /* 让 flex 自动计算 */
+    max-width: none !important;
+    padding: 40px !important; /* 这里的 padding 是正文内部呼吸感，可以保留 */
+    margin: 0 !important;
+}
+
+/* 4. 关键：修正 content 内部宽度为 100% (不再是 80% 的 80%) */
+#content, 
+.ck-content, 
+.ck-content > div {
+    width: 100% !important;           /* 这里必须改回 100%，否则内容会进一步缩窄 */
+    max-width: 100% !important;
+}
+
+/* ==========================================================================
+   方案 A：侧边栏自动滑入/滑出 (悬停触发)
+   ========================================================================== */
+
+/* 1. 初始状态：缩小侧边栏 */
+#menu {
+    transition: all 0.3s ease-in-out !important; /* 增加平滑动画 */
+    flex: 0 0 10px !important;                 /* 平时只留 10px 的触发区域 */
+    width: 10px !important;
+    min-width: 10px !important;
+    opacity: 0.1;                              /* 隐约可见 */
+    z-index: 100;
+}
+
+/* 2. 悬停状态：恢复正常宽度 */
+#menu:hover {
+    flex: 0 0 280px !important;                /* 展开到 280px */
+    width: 280px !important;
+    min-width: 280px !important;
+    opacity: 1;                                /* 完全显示 */
+    box-shadow: 10px 0 30px rgba(0,0,0,0.5);   /* 增加阴影增强悬浮感 */
+}
+
+/* 3. 悬停时微调正文，防止文字抖动（可选） */
+#menu:hover + #main {
+    margin-left: 0; 
+}
