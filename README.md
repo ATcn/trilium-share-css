@@ -98,13 +98,13 @@ https://trilium.atibm.com/share/softwarenppplugins
 ## ATHidesideTypora
 
 ### default share view
-<img width="2539" height="1238" alt="cat_2026-01-27_131957" src="https://github.com/user-attachments/assets/27c0d9f3-a0c6-4c7f-bb91-049d45ff019a" />
+<img width="2558" height="1270" alt="cat_2026-01-28_104043" src="https://github.com/user-attachments/assets/e497c335-b13b-40c9-9355-e431c13af12d" />
 
 ### mouse move and auto expand sidebar view
-<img width="2497" height="1260" alt="cat_2026-01-27_131950" src="https://github.com/user-attachments/assets/0a87f895-6c4a-4582-b942-177ad01281ce" />
+<img width="2556" height="1258" alt="cat_2026-01-28_104102" src="https://github.com/user-attachments/assets/ba65e7c5-6264-4baf-b25d-b6d5426462c7" />
 
 ### change chrome window width view
-<img width="1533" height="1254" alt="cat_2026-01-27_132017" src="https://github.com/user-attachments/assets/4a70f340-59ea-44aa-b141-fd25f22559f0" />
+<img width="1486" height="948" alt="cat_2026-01-28_104130" src="https://github.com/user-attachments/assets/73f407b0-cd14-4776-b62a-49a038a32678" />
 
 ## ATHidesideBlack
 
