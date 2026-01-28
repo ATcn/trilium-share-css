@@ -93,6 +93,8 @@ flowchart LR
 
 # demo
 
+https://trilium.atibm.com/share/softwarenppplugins
+
 ## ATHidesideTypora
 
 ### default share view
